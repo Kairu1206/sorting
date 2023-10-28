@@ -1,13 +1,14 @@
 import java.util.Comparator;
 import java.util.Random;
+import java.util.List;
 
 /**
  * Your implementation of various sorting algorithms.
  *
- * @author YOUR NAME HERE
+ * @author Quang Nguyen
  * @version 1.0
- * @userid YOUR USER ID HERE (i.e. gburdell3)
- * @GTID YOUR GT ID HERE (i.e. 900000000)
+ * @userid qnguyen305
+ * @GTID 903770019
  *
  * Collaborators: LIST ALL COLLABORATORS YOU WORKED WITH HERE
  *
@@ -36,6 +37,26 @@ public class Sorting {
      *                                            null
      */
     public static <T> void insertionSort(T[] arr, Comparator<T> comparator) {
+        if (arr == null) {
+            throw new IllegalArgumentException("array is null");
+        }
+        if (comparator == null) {
+            throw new IllegalArgumentException("comparator is null");
+        }
+
+        for (int i = 1; i < arr.length; i++) {
+            int j = i;
+            while (j > 0 && comparator.compare(arr[j - 1], arr[j]) > 0) {
+                T temp = arr[j - 1];
+                arr[j - 1] = arr[j];
+                arr[j] = temp;
+                j--;
+            }
+        }
+
+        for (var d : arr) {
+            System.out.print(d + ", ");
+        }
 
     }
 
@@ -63,7 +84,12 @@ public class Sorting {
      *                                            null
      */
     public static <T> void cocktailSort(T[] arr, Comparator<T> comparator) {
-
+        if (arr == null) {
+            throw new IllegalArgumentException("array is null");
+        }
+        if (comparator == null) {
+            throw new IllegalArgumentException("comparator is null");
+        }
     }
 
     /**
@@ -96,7 +122,12 @@ public class Sorting {
      *                                            null
      */
     public static <T> void mergeSort(T[] arr, Comparator<T> comparator) {
-
+        if (arr == null) {
+            throw new IllegalArgumentException("array is null");
+        }
+        if (comparator == null) {
+            throw new IllegalArgumentException("comparator is null");
+        }
     }
 
     /**
@@ -137,7 +168,15 @@ public class Sorting {
      */
     public static <T> void quickSort(T[] arr, Comparator<T> comparator,
                                      Random rand) {
-
+        if (arr == null) {
+            throw new IllegalArgumentException("array is null");
+        }
+        if (comparator == null) {
+            throw new IllegalArgumentException("comparator is null");
+        }
+        if (rand == null) {
+            throw new IllegalArgumentException("random is null");
+        }
     }
 
     /**
@@ -183,7 +222,9 @@ public class Sorting {
      * @throws java.lang.IllegalArgumentException if the array is null
      */
     public static void lsdRadixSort(int[] arr) {
-
+        if (arr == null) {
+            throw new IllegalArgumentException("array is null");
+        }
     }
 
     /**
@@ -216,6 +257,11 @@ public class Sorting {
      * @throws java.lang.IllegalArgumentException if the data is null
      */
     public static int[] heapSort(List<Integer> data) {
+        if (data == null) {
+            throw new IllegalArgumentException("data is null");
+        }
 
+        int[] arr = new int[0];
+        return arr;
     }
 }
