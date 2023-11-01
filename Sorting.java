@@ -1,6 +1,8 @@
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * Your implementation of various sorting algorithms.
@@ -54,10 +56,6 @@ public class Sorting {
             }
         }
 
-        for (var d : arr) {
-            System.out.print(d + ", ");
-        }
-
     }
 
     /**
@@ -89,6 +87,30 @@ public class Sorting {
         }
         if (comparator == null) {
             throw new IllegalArgumentException("comparator is null");
+        }
+
+        int start = 0;
+        int end = arr.length - 1;
+        int swapped = start;
+        while (start < end) {
+           for (int i = start; i < end; i++) {
+               if (comparator.compare(arr[i], arr[i + 1]) > 0) {
+                   T temp = arr[i];
+                   arr[i] = arr[i + 1];
+                   arr[i + 1] = temp;
+                   swapped = i;
+               }
+           }
+           end = swapped;
+           for (int i = end; i > start; i--) {
+               if (comparator.compare(arr[i], arr[i  -1]) < 0) {
+                   T temp = arr[i];
+                   arr[i] = arr[i - 1];
+                   arr[i - 1] = temp;
+                   swapped = i;
+               }
+           }
+           start = swapped;
         }
     }
 
@@ -127,6 +149,51 @@ public class Sorting {
         }
         if (comparator == null) {
             throw new IllegalArgumentException("comparator is null");
+        }
+
+        int len = arr.length;
+        int midIndex = len/2;
+        T[] leftArr = null;
+        T[] rightArr = null;
+        if (len > 1) {
+            leftArr = (T[]) new Object[midIndex];
+            rightArr = (T[]) new Object[len - midIndex];
+            for (int i = 0; i < midIndex; i++) {
+                leftArr[i] = arr[i];
+            }
+            for (int i = midIndex; i < arr.length; i++) {
+                rightArr[i - midIndex] = arr[i];
+            }
+        }
+        if (leftArr != null) {
+            mergeSort(leftArr, comparator);
+        }
+        if (rightArr != null) {
+            mergeSort(rightArr, comparator);
+        }
+
+        int leftIndex = 0, rightIndex = 0, currIndex = 0;
+        if (leftArr != null && rightArr != null) {
+            while (leftIndex < midIndex && rightIndex < len - midIndex) {
+                if (comparator.compare(leftArr[leftIndex], rightArr[rightIndex]) <= 0) {
+                    arr[currIndex] = leftArr[leftIndex];
+                    leftIndex++;
+                } else {
+                    arr[currIndex] = rightArr[rightIndex];
+                    rightIndex++;
+                }
+                currIndex++;
+            }
+            while (leftIndex < midIndex) {
+                arr[currIndex] = leftArr[leftIndex];
+                currIndex++;
+                leftIndex++;
+            }
+            while (rightIndex < len - midIndex) {
+                arr[currIndex] = rightArr[rightIndex];
+                currIndex++;
+                rightIndex++;
+            }
         }
     }
 
@@ -177,6 +244,48 @@ public class Sorting {
         if (rand == null) {
             throw new IllegalArgumentException("random is null");
         }
+        qSort(arr, comparator, rand, 0, arr.length - 1);
+    }
+
+    /**
+     *
+     * @param arr array
+     * @param comparator comparator
+     * @param rand random
+     * @param left left bound
+     * @param right right bound
+     * @param <T>
+     */
+    private static <T> void qSort(T[] arr, Comparator comparator, Random rand, int left, int right) {
+        if (right - left <= 0) {
+            return;
+        }
+        int pivotIndex = rand.nextInt(right - left + 1) + left;
+        T pivot = arr[pivotIndex];
+        T temp = arr[left];
+        arr[left] = pivot;
+        arr[pivotIndex] = temp;
+        int i = left + 1, j = right;
+        while (i <= j) {
+            while (i <= j && comparator.compare(arr[i], pivot) <= 0) {
+                i++;
+            }
+            while (i <= j && comparator.compare(arr[j], pivot) >= 0) {
+                j--;
+            }
+            if (i <= j) {
+                T temp1 = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp1;
+                i++;
+                j--;
+            }
+        }
+        T temp2 = arr[j];
+        arr[j] = pivot;
+        arr[left] = temp2;
+        qSort(arr, comparator, rand, left, j - 1);
+        qSort(arr, comparator, rand, j + 1, right);
     }
 
     /**
@@ -225,6 +334,39 @@ public class Sorting {
         if (arr == null) {
             throw new IllegalArgumentException("array is null");
         }
+        LinkedList<Integer>[] buckets = new LinkedList[19];
+        int largestNumber = arr[0];
+        int iterations = 0;
+        int len = arr.length;
+
+        for (int i = 1; i < len; i++) {
+            if (Math.abs(arr[i]) > largestNumber) {
+                largestNumber = Math.abs(arr[i]);
+            }
+        }
+        while (largestNumber > 0) {
+            largestNumber /= 10;
+            iterations++;
+        }
+        int div = 1;
+        for (int i = 1; i <= iterations; i++) {
+            for (int j = 0; j < len; j++) {
+                int bucket = ((arr[j] / div) % 10) + 9;
+                if (buckets[bucket] == null) {
+                    LinkedList<Integer> newLL = new LinkedList<>();
+                    buckets[bucket] = newLL;
+                }
+                buckets[bucket].add(arr[j]);
+            }
+            int index = 0;
+            for (int b = 0; b < buckets.length; b++) {
+                while (buckets[b] != null && !buckets[b].isEmpty()) {
+                    arr[index] = buckets[b].removeFirst();
+                    index++;
+                }
+            }
+            div *= 10;
+        }
     }
 
     /**
@@ -260,8 +402,12 @@ public class Sorting {
         if (data == null) {
             throw new IllegalArgumentException("data is null");
         }
-
-        int[] arr = new int[0];
+        PriorityQueue<Integer> priorQueue = new PriorityQueue(data);
+        System.out.println();
+        int[] arr = new int[data.size()];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = priorQueue.remove();
+        }
         return arr;
     }
 }
