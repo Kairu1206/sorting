@@ -93,24 +93,24 @@ public class Sorting {
         int end = arr.length - 1;
         int swapped = start;
         while (start < end) {
-           for (int i = start; i < end; i++) {
-               if (comparator.compare(arr[i], arr[i + 1]) > 0) {
-                   T temp = arr[i];
-                   arr[i] = arr[i + 1];
-                   arr[i + 1] = temp;
-                   swapped = i;
-               }
-           }
-           end = swapped;
-           for (int i = end; i > start; i--) {
-               if (comparator.compare(arr[i], arr[i  -1]) < 0) {
-                   T temp = arr[i];
-                   arr[i] = arr[i - 1];
-                   arr[i - 1] = temp;
-                   swapped = i;
-               }
-           }
-           start = swapped;
+            for (int i = start; i < end; i++) {
+                if (comparator.compare(arr[i], arr[i + 1]) > 0) {
+                    T temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                    swapped = i;
+                }
+            }
+            end = swapped;
+            for (int i = end; i > start; i--) {
+                if (comparator.compare(arr[i], arr[i - 1]) < 0) {
+                    T temp = arr[i];
+                    arr[i] = arr[i - 1];
+                    arr[i - 1] = temp;
+                    swapped = i;
+                }
+            }
+            start = swapped;
         }
     }
 
@@ -152,7 +152,7 @@ public class Sorting {
         }
 
         int len = arr.length;
-        int midIndex = len/2;
+        int midIndex = len / 2;
         T[] leftArr = null;
         T[] rightArr = null;
         if (len > 1) {
@@ -172,7 +172,9 @@ public class Sorting {
             mergeSort(rightArr, comparator);
         }
 
-        int leftIndex = 0, rightIndex = 0, currIndex = 0;
+        int leftIndex = 0;
+        int rightIndex = 0;
+        int currIndex = 0;
         if (leftArr != null && rightArr != null) {
             while (leftIndex < midIndex && rightIndex < len - midIndex) {
                 if (comparator.compare(leftArr[leftIndex], rightArr[rightIndex]) <= 0) {
@@ -254,9 +256,9 @@ public class Sorting {
      * @param rand random
      * @param left left bound
      * @param right right bound
-     * @param <T>
+     * @param <T> data type for array
      */
-    private static <T> void qSort(T[] arr, Comparator comparator, Random rand, int left, int right) {
+    private static <T> void qSort(T[] arr, Comparator<T> comparator, Random rand, int left, int right) {
         if (right - left <= 0) {
             return;
         }
@@ -265,7 +267,8 @@ public class Sorting {
         T temp = arr[left];
         arr[left] = pivot;
         arr[pivotIndex] = temp;
-        int i = left + 1, j = right;
+        int i = left + 1;
+        int j = right;
         while (i <= j) {
             while (i <= j && comparator.compare(arr[i], pivot) <= 0) {
                 i++;
@@ -402,8 +405,7 @@ public class Sorting {
         if (data == null) {
             throw new IllegalArgumentException("data is null");
         }
-        PriorityQueue<Integer> priorQueue = new PriorityQueue(data);
-        System.out.println();
+        PriorityQueue<Integer> priorQueue = new PriorityQueue<>(data);
         int[] arr = new int[data.size()];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = priorQueue.remove();
